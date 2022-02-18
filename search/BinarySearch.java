@@ -2,7 +2,7 @@ package search;
 
 public class BinarySearch{
 
-    // Pred: i < j => a[i] >= a[j]
+    // Pred: i < j => a[i] < a[j]
     // Post: R = (min i, a[i] <= x) || (a.length - if index doesn't exists)
     public static int iterativeSearch(int x, int[] a) {
         // (-1 == -1 || a[-1] > x) && (a.length == a.length || a[a.length] <= x)
@@ -28,7 +28,7 @@ public class BinarySearch{
             // Inv
         }
         // (l' == -1 || a[l'] > x) && (r' == a.length || a[r'] <= x) && (r' - l' <= 1)
-        // ((a[r'] <= x) && (r' == 0 || a[r' - 1] > x)) || (r == a.length) - index doesn't exists
+        // ((a[r'] <= x) && (r' == 0 || a[r' - 1] > x)) || (r' == a.length) - index doesn't exists
         return r;
     }
 
@@ -38,7 +38,7 @@ public class BinarySearch{
         // Inv: (l' == -1 || a[l'] > x) && (r' == a.length || a[r'] <= x)
         if (r - l <= 1) {
             // Inv && (r' - l' <= 1)
-            // ((a[r'] <= x) && (r' == 0 || a[r' - 1] > x)) || (r == a.length) - index doesn't exists
+            // ((a[r'] <= x) && (r' == 0 || a[r' - 1] > x)) || (r' == a.length) - index doesn't exists
             return r;
         }
         // Inv && (r' - l' > 1)
