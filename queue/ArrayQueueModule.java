@@ -1,7 +1,8 @@
 package queue;
 
 
-    // Model: a[1]..a[n]
+
+// Model: a[1]..a[n]
     // Invariant: for i=head..(head + size): a[i] != null
 
     
@@ -14,19 +15,21 @@ public class ArrayQueueModule{
     // Pred: element != null
     // Post: elements
     static public void enqueue(Object element) {
-        assert element != null;
-        ensureCapasity(head, tail);
+        if (element == null) {
+            return;
+        }
+        ensureCapasity();
         elements[tail] = element;
         tail = (tail + 1) % elements.length;
         size++;
     }
 
-    static private void ensureCapasity(int head, int tail) {
-        if (head == tail + 1) {
-            Object[] array = new Object[elements.length * 2];
-            System.arraycopy(elements, head, array, 0, size - head);
-            System.arraycopy(elements, 0, array, size - head + 1, head);
-            elements = array;
+    static private void ensureCapasity() {
+        if (size >= elements.length) {
+            Object[] newElements = new Object[elements.length * 2];
+            System.arraycopy(elements, head, newElements, 0, size - head);
+            System.arraycopy(elements, 0, newElements, size - head, head);
+            elements = newElements;
             tail = size;
             head = 0;  
         }
@@ -36,7 +39,9 @@ public class ArrayQueueModule{
     }
 
     static public Object dequeue() {
-        assert size >= 1;
+        if (size < 1) {
+            return null;
+        }
         Object result = elements[head];
         elements[head] = null;
         head = (head + 1) % elements.length;
@@ -57,6 +62,7 @@ public class ArrayQueueModule{
             i = (i % elements.length);
             elements[i] = null;
         }
+        size = 0;
         head = 0;
         tail = 0;
     }

@@ -1,5 +1,6 @@
 package queue;
 
+
 public class ArrayQueueADT {
     private Object[] elements = new Object[16];
     private int tail = 0;
@@ -7,21 +8,24 @@ public class ArrayQueueADT {
     private int size = 0;
 
     static public void enqueue(ArrayQueueADT queue, Object element) {
-        assert element != null;
-        ensureCapasity(queue, queue.head, queue.tail);
+        if (element == null) {
+            return;
+        }
+        ensureCapasity(queue);
         queue.elements[queue.tail] = element;
         queue.tail = (queue.tail + 1) % queue.elements.length;
         queue.size++;
     }
     
-    static private void ensureCapasity(ArrayQueueADT queue, int head, int tail) {
-        if (head == tail + 1) {
-            Object[] array = new Object[queue.elements.length * 2];
-            System.arraycopy(queue.elements, head, array, 0, queue.size - head);
-            System.arraycopy(queue.elements, 0, array, queue.size - head + 1, head);
-            queue.elements = array;
+    static private void ensureCapasity(ArrayQueueADT queue) {
+        if (queue.size >= queue.elements.length) {
+            Object[] newElements = new Object[queue.elements.length * 2];
+            System.arraycopy(queue.elements, queue.head, newElements, 0, queue.size - queue.head);
+            System.arraycopy(queue.elements, 0, newElements, queue.size - queue.head, queue.head);
+            queue.elements = newElements;
             queue.tail = queue.size;
             queue.head = 0;  
+            
         }
     }
 
@@ -30,7 +34,9 @@ public class ArrayQueueADT {
     }
 
     static public Object dequeue(ArrayQueueADT queue) {
-        assert queue.size >= 1;
+        if (queue.size < 1) {
+            return null;
+        }
         Object result = queue.elements[queue.head];
         queue.elements[queue.head] = null;
         queue.head = (queue.head + 1) % queue.elements.length;
@@ -53,6 +59,7 @@ public class ArrayQueueADT {
         }
         queue.head = 0;
         queue.tail = 0;
+        queue.size = 0;
     }
 }
 
