@@ -1,16 +1,28 @@
 package queue;
 
 public class ArrayQueue {
-    private Object[] elements = new Object[1000001];
+    private Object[] elements = new Object[16];
     private int tail = 0;
     private int head = 0;
     private int size = 0;
 
     public void enqueue(Object element) {
         assert element != null;
+        ensureCapasity(head, tail);
         elements[tail] = element;
-        tail = (tail + 1) % 1000001;
+        tail = (tail + 1) % elements.length;
         size++;
+    }
+
+    private void ensureCapasity(int head, int tail) {
+        if (head == tail + 1) {
+            Object[] array = new Object[elements.length * 2];
+            System.arraycopy(elements, head, array, 0, size - head);
+            System.arraycopy(elements, 0, array, size - head + 1, head);
+            elements = array;
+            tail = size;
+            head = 0; 
+        }
     }
 
     public Object element() {
@@ -21,7 +33,7 @@ public class ArrayQueue {
         assert size >= 1;
         Object result = elements[head];
         elements[head] = null;
-        head = (head + 1) % 1000001;
+        head = (head + 1) % elements.length;
         size--;
         return result;
     }
@@ -36,7 +48,7 @@ public class ArrayQueue {
 
     public void clear() {
         for (int i = head; i < head + size; i++) {
-            i = (i % 1000001);
+            i = (i % elements.length);
             elements[i] = null;
         }
         head = 0;
